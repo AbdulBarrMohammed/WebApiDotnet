@@ -22,7 +22,7 @@ namespace WebApplication1.Controllers
             return Ok(account.Cards);
         }
 
-        [HttpGet("{cardId}")]
+        [HttpGet("{cardId}", Name ="GetCard")]
         public ActionResult<Card> GetCard(int accountId, int cardId)
         {
             var account = AccountDbContext.Current.Accounts.FirstOrDefault( x => x.Id == accountId);
@@ -36,6 +36,41 @@ namespace WebApplication1.Controllers
             }
 
             return Ok(card);
+        }
+
+
+        [HttpPost] //Create new resource
+        public ActionResult<Card> CreateCard(int accountId, [FromBody] CreateCard createCard)
+        {
+            //First check if account exists
+            // check if number exists in cards
+            // if it exists create a card
+            // add it to the given account's cards list
+            // return response
+            var account = AccountDbContext.Current.Accounts.FirstOrDefault( x => x.Id == accountId);
+            if (account is null) {
+                return BadRequest();
+            }
+
+            var card = account.Cards.FirstOrDefault(x => x.Number == createCard.Number);
+            if (card is null) {
+                return BadRequest();
+            }
+
+            int id = account.Cards.OrderByDescending( x => x.Id).First().Id;
+
+            Card _card = new Card() {
+                ExpireDate = createCard.ExpireDate,
+                Number = createCard.Number,
+                HolderName = createCard.HolderName,
+                Id = ++id
+
+            };
+
+            account.Cards.Add(_card);
+            return CreatedAtRoute("GetCard", new {accountId, cardId = _card.Id}, _card);
+
+
         }
     }
 }
