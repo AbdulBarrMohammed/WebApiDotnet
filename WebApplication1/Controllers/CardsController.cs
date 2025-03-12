@@ -72,5 +72,19 @@ namespace WebApplication1.Controllers
 
 
         }
+
+        [HttpPut("{cardId}")] //allows update
+        public ActionResult<Card> UpdateCard(int accountId, int cardId, UpdateCard updateCard)
+        {
+            var account = AccountDbContext.Current.Accounts.FirstOrDefault( x => x.Id == accountId);
+            if (account is null) {
+                return BadRequest();
+            }
+
+            var card = account.Cards.FirstOrDefault(x => x.Number == createCard.Number);
+            if (card is null) {
+                return BadRequest();
+            }
+        }
     }
 }
