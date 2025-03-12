@@ -15,6 +15,6 @@ namespace WebApplication1.Models
         public string Number { get; set; }
 
         [RegularExpression("\\d{2}/\\d{2}")]
-         public string ExpireDate { get; set; }
+        public string ExpireDate { get; set; }
     }
 }
