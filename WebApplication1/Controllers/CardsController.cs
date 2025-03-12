@@ -42,6 +42,7 @@ namespace WebApplication1.Controllers
         [HttpPost] //Create new resource
         public ActionResult<Card> CreateCard(int accountId, [FromBody] CreateCard createCard)
         {
+    
             //First check if account exists
             // check if number exists in cards
             // if it exists create a card
@@ -81,10 +82,15 @@ namespace WebApplication1.Controllers
                 return BadRequest();
             }
 
-            var card = account.Cards.FirstOrDefault(x => x.Number == createCard.Number);
+            var card = account.Cards.FirstOrDefault(x => x.Id == cardId);
             if (card is null) {
                 return BadRequest();
             }
+
+            card.Number = updateCard.Number;
+            card.ExpireDate = updateCard.ExpireDate;
+            card.HolderName = updateCard.HolderName;
+            return NoContent();
         }
     }
 }
